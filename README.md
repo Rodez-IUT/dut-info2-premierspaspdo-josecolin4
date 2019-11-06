@@ -1,7 +1,7 @@
 # INFO2-PremiersPasPDO
 
-### NOM : DOE
-### Prénom : John
+### NOM : COLIN
+### Prénom : José
 ### Groupe de TP : 
 - [X] TD1
 - [ ] TD2
