@@ -24,7 +24,7 @@
 		} catch (PDOException $e) {
 			throw new PDOException($e->getMessage(), (int)$e->getCode());
 		} 
-		$stmt = $pdo->query('SELECT * FROM users AS u JOIN status AS s ON u.status_id=s.id WHERE s.name LIKE "e%" AND u.username="Active account" ORDER BY username');
+		$stmt = $pdo->query('SELECT * FROM users AS u JOIN status AS s ON u.status_id=s.id WHERE s.name = "Active account" AND u.username LIKE "e%" ORDER BY username');
 		while ($row = $stmt->fetch()) {
 			echo '<tr>';
 			echo '<td>'.$row['id'].'</td>';
