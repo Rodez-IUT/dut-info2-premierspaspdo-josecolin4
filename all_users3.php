@@ -39,8 +39,13 @@
 			} catch (PDOException $e) {
 				throw new PDOException($e->getMessage(), (int)$e->getCode());
 			} 
-			$stmt = $pdo->prepare('SELECT * FROM users AS u JOIN status AS s ON u.status_id=s.id WHERE s.name = ? AND u.username LIKE ? ORDER BY username');
-			$stmt->execute([$_POST['actif'],$_POST['nom'].'%']);
+			
+			// $stmt = $pdo->prepare('SELECT * FROM users AS u JOIN status AS s ON u.status_id=s.id WHERE s.name = ? AND u.username LIKE ? ORDER BY username');
+			// $stmt->execute([$_POST['actif'],$_POST['nom'].'%']);
+			
+			
+			// changement pour faire fonctionner la requète de la question 3.3
+			$stmt = $pdo->query("SELECT * FROM users AS u JOIN status AS s ON u.status_id=s.id WHERE s.name = ".$_POST['actif']." AND u.username LIKE '".$_POST['nom']." ORDER BY username");
 			while ($row = $stmt->fetch()) {
 				echo '<tr>';
 				echo '<td>'.$row['id'].'</td>';
