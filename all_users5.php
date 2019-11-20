@@ -49,7 +49,7 @@
 				echo '<td>'.$row['username'].'</td>';
 				echo '<td>'.$row['email'].'</td>';
 				echo '<td>'.$row['name'].'</td>';
-				if ($row['name'] == "Waiting for account deletion") {
+				if (strcmp($row['name'], "Waiting for account deletion") != 0) {
 					echo '<td> <a href="all_users5.php?status_id=3&user_id='.$row['id'].'&action=askDeletion">Ask delation</a> </td>';
 				}
 				echo '</tr>';
