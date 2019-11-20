@@ -41,7 +41,7 @@
 				throw new PDOException($e->getMessage(), (int)$e->getCode());
 			} 
 			
-			$stmt = $pdo->prepare('SELECT * FROM users AS u JOIN status AS s ON u.status_id=s.id WHERE s.name = ? AND u.username LIKE ? ORDER BY username');
+			$stmt = $pdo->prepare('SELECT u.id, username, email, name FROM users AS u JOIN status AS s ON u.status_id=s.id WHERE s.name = ? AND u.username LIKE ? ORDER BY username');
 			$stmt->execute([$_POST['actif'],$_POST['nom'].'%']);	
 			while ($row = $stmt->fetch()) {
 				echo '<tr>';
@@ -49,6 +49,9 @@
 				echo '<td>'.$row['username'].'</td>';
 				echo '<td>'.$row['email'].'</td>';
 				echo '<td>'.$row['name'].'</td>';
+				if ($row['name'] == "Waiting for account deletion") {
+					echo '<td> <a href="all_users5.php?status_id=3&user_id='.$row['id'].'&action=askDeletion">Ask delation</a> </td>';
+				}
 				echo '</tr>';
 			}
 		}
