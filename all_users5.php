@@ -23,7 +23,6 @@
 	
 		<table>
 		<?php
-		if (isset($_POST['actif']) && isset($_POST['nom'])) {			
 			$host = 'localhost';
 			$db   = 'my_activities';
 			$user = 'root';
@@ -41,6 +40,33 @@
 				throw new PDOException($e->getMessage(), (int)$e->getCode());
 			} 
 			
+		if (isset($_GET['status_id']) && isset($_GET['user_id']) && isset($_GET['action'])) {
+				// suppresion de l'utilisateur aprés demande de suppresion
+				try {
+					$pdo->beginTransaction();
+					$stmt = $pdo->prepare('UPDATE users SET status_id = 3 WHERE id=?');
+					$stmt->execute([$_GET['user_id']]);
+				} catch (Exception $e){
+					$pdo->rollBack();
+					throw $e;					
+				}				
+				$pdo->commit();
+				
+				// ajout a la table action log
+				try {
+					$pdo->beginTransaction();
+					$stmt = $pdo->prepare('INSERT INTO action_log (action_date, action_name, user_id) VALUES ("'.date("Y-m-d H:i:s").'", ?, ?) ');
+					$stmt->execute([$_GET['action'], $_GET['user_id']]);
+				} catch (Exception $e){
+					$pdo->rollBack();
+					throw $e;					
+				}
+				$pdo->commit();				
+		}
+		
+		if (isset($_POST['actif']) && isset($_POST['nom'])) {			
+
+			
 			$stmt = $pdo->prepare('SELECT u.id, username, email, name FROM users AS u JOIN status AS s ON u.status_id=s.id WHERE s.name = ? AND u.username LIKE ? ORDER BY username');
 			$stmt->execute([$_POST['actif'],$_POST['nom'].'%']);	
 			while ($row = $stmt->fetch()) {
@@ -50,7 +76,7 @@
 				echo '<td>'.$row['email'].'</td>';
 				echo '<td>'.$row['name'].'</td>';
 				if (strcmp($row['name'], "Waiting for account deletion") != 0) {
-					echo '<td> <a href="all_users5.php?status_id=3&user_id='.$row['id'].'&action=askDeletion">Ask delation</a> </td>';
+					echo '<td> <a href="all_users5.php?status_id=3&user_id='.$row['id'].'&action=askDeletion">Ask delation</a> </td>';					
 				}
 				echo '</tr>';
 			}
