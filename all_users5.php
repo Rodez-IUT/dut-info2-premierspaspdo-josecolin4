@@ -20,6 +20,12 @@
 			<input type="submit" />
 		</form>
 	
+		<?php
+		function lancerException() {
+			throw new Exception();
+		}
+		?>
+	
 	
 		<table>
 		<?php
@@ -44,24 +50,21 @@
 				// suppresion de l'utilisateur aprés demande de suppresion
 				try {
 					$pdo->beginTransaction();
+					
+					// première requète SQL
 					$stmt = $pdo->prepare('UPDATE users SET status_id = 3 WHERE id=?');
 					$stmt->execute([$_GET['user_id']]);
-				} catch (Exception $e){
-					$pdo->rollBack();
-					throw $e;					
-				}				
-				$pdo->commit();
-				
-				// ajout a la table action log
-				try {
-					$pdo->beginTransaction();
+					
+					lancerException();
+					
+					// deuxième requète SQL
 					$stmt = $pdo->prepare('INSERT INTO action_log (action_date, action_name, user_id) VALUES ("'.date("Y-m-d H:i:s").'", ?, ?) ');
 					$stmt->execute([$_GET['action'], $_GET['user_id']]);
+					$pdo->commit();
 				} catch (Exception $e){
 					$pdo->rollBack();
 					throw $e;					
 				}
-				$pdo->commit();				
 		}
 		
 		if (isset($_POST['actif']) && isset($_POST['nom'])) {			
