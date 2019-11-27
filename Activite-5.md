@@ -1,0 +1,2 @@
+une erreur est provoquer entre 2 reqètes SQL, la deuxième ne s'execute donc pas. Pour résoudre ce problème, il faudrait
+les executées dans une même transaction pour garantir que l'on est pas l'une sans l'autre  
